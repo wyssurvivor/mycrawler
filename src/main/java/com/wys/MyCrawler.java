@@ -11,8 +11,11 @@ import com.wys.data.DataIface;
 import com.wys.data.MySQLTool;
 import com.wys.data.MySqlFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.*;
 public class MyCrawler {
 	List<String> list=new LinkedList<String>();
@@ -34,6 +37,10 @@ public class MyCrawler {
 		Connection con=null;
 		con=Jsoup.connect(url).data(data);
 		return con;
+	}
+	public Document directParseWithCharCode(String url,String charCode){
+		String html=readHtml(url,charCode);
+		return Jsoup.parse(html);
 	}
 	public void parse(boolean isGet){
 		Connection con=null;
@@ -92,6 +99,21 @@ public class MyCrawler {
 	private void getInnerHtml(Document doc){
 		String innerHtml=doc.html();
 		System.out.println(innerHtml);
+	}
+	private String readHtml(String url,String charCode){
+		StringBuffer sb=new StringBuffer("");
+		URL url_1=null;
+		try{
+			url_1=new URL(url);
+			BufferedReader br=new BufferedReader(new InputStreamReader(url_1.openStream(),charCode));
+			String s="";
+			while((s=br.readLine())!=null){
+				sb.append(s);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return sb.toString();
 	}
 	public static void main(String[] args){
 		String url="http://www.baidu.com/";
