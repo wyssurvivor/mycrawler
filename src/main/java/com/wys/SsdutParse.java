@@ -4,28 +4,85 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class SsdutParse implements ParseStrategy{
-	Document doc=null;
 	String rootUrl="";
 	private List<String> indexList=new LinkedList<String>();
 	private List<String> contentList=new LinkedList<String>();
 	private Set<String> visitedSet=new TreeSet<String>();
-	public SsdutParse(Document doc,String url){
-		this.doc=doc;
-		this.rootUrl=url;
-		visitedSet.add(rootUrl);
-		indexList.add(rootUrl);
+	private static CrawlerIface crawler=CrawlerFactory.getInstance();
+	private boolean isRunning=false;
+	public SsdutParse(){
 	}
-	public void parse(){
+	private void initParse(String url){
+		rootUrl=url;
+		indexList.add(rootUrl);
+		contentList.add(rootUrl);
+	}
+	public void parse(String url){
+		initParse(url);
+		while(!indexList.isEmpty()){
+			String indexUrl=indexList.remove(0);
+			Document doc=crawler.getDocument(indexUrl, "utf8");
+			Elements eles=doc.select("a[href]");
+			for(Element ele:eles){
+				String newUrl=ele.attr("abs:href");
+				if(isContentPage(newUrl)){
+					insertContentPage(newUrl);
+				}else if(isIndexPage(newUrl)&&newUrl.indexOf("News/student")>0){
+					insertIndexPage(newUrl);
+				}else 
+					continue;
+			}
+		}
+	}
+	private void insertIndexPage(String newUrl){
+		indexList.add(newUrl);
+	}
+	private void insertContentPage(String newUrl){
+		contentList.add(newUrl);
+		if(!isRunning){
+			synchronized(this){
+				if(!isRunning){
+					//new thread
+				}
+			}
+		}
 		
 	}
 	private boolean isIndexPage(String url){
-		return true;
+		Pattern pattern=Pattern.compile("(http://|https://){1}[\\w\\./]+");
+		Matcher matcher=pattern.matcher(url);
+		return matcher.matches();
 	}
 	private boolean isContentPage(String url){
-		return true;
+		Pattern pattern=Pattern.compile("(http://|https://){1}[\\w\\./]+([0-9]+\\.html){1}");
+		Matcher matcher=pattern.matcher(url);
+		return matcher.matches();
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
