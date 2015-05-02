@@ -13,8 +13,14 @@ public class CrawTest {
 	}
 	@Test
 	public void testPattern(){
-		String url="http://oldssdut.dlut.edu.cn/index.php/News/13277.html";
+		String url="http://oldssdut.dlut.edu.cn/index.php/News/student.html";
 		SsdutParse parse=new SsdutParse();
+		parse.parse(url);
 //		System.out.println(parse.isContentPage(url));
+	}
+	public void testParseContent(){
+		String url="http://oldssdut.dlut.edu.cn/index.php/News/13274.html";
+		ContentFetch fetcher=new ContentFetch();
+		fetcher.parse(url);
 	}
 }

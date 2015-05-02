@@ -14,16 +14,14 @@ import org.jsoup.select.Elements;
 public class SsdutParse implements ParseStrategy{
 	String rootUrl="";
 	private List<String> indexList=new LinkedList<String>();
-	private List<String> contentList=new LinkedList<String>();
 	private Set<String> visitedSet=new TreeSet<String>();
 	private static CrawlerIface crawler=CrawlerFactory.getInstance();
-	private boolean isRunning=false;
+	private ContentFetch fetcher=new ContentFetch();
 	public SsdutParse(){
 	}
 	private void initParse(String url){
 		rootUrl=url;
 		indexList.add(rootUrl);
-		contentList.add(rootUrl);
 	}
 	public void parse(String url){
 		initParse(url);
@@ -43,18 +41,12 @@ public class SsdutParse implements ParseStrategy{
 		}
 	}
 	private void insertIndexPage(String newUrl){
-		indexList.add(newUrl);
+//		indexList.add(newUrl);
+		System.out.println(newUrl);
 	}
 	private void insertContentPage(String newUrl){
-		contentList.add(newUrl);
-		if(!isRunning){
-			synchronized(this){
-				if(!isRunning){
-					//new thread
-				}
-			}
-		}
-		
+//		fetcher.insertContentPage(newUrl);
+		System.out.println(newUrl);
 	}
 	private boolean isIndexPage(String url){
 		Pattern pattern=Pattern.compile("(http://|https://){1}[\\w\\./]+");
