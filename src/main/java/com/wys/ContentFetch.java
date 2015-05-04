@@ -1,39 +1,52 @@
 package com.wys;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-public class ContentFetch extends Thread implements ParseStrategy{
+public class ContentFetch implements ParseStrategy{
 	private boolean isRunning=false;
-	private List<String> contentList=new LinkedList<String>();
+	private Queue<String> contentList=new ConcurrentLinkedQueue<String>();
 	private static CrawlerIface crawler=CrawlerFactory.getInstance();
+	private FetchThread thread=null;
+	private Object lockObj=new Object();
 	public ContentFetch(){}
-	public ContentFetch(List<String> contentList){
+	public ContentFetch(Queue<String> contentList){
 		this.contentList=contentList;
 	}
-	public void run(){
-		try{
-			while(!contentList.isEmpty()){
-				String url=contentList.remove(0);
-				parse(url);
+	private class FetchThread extends Thread{
+		public void run(){
+			try{
+				while(!contentList.isEmpty()){
+					String url=contentList.poll();
+					parse(url);
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				synchronized(lockObj){
+					isRunning=false;
+					thread=null;
+				}
 			}
-		}finally{
-			isRunning=false;
 		}
 	}
 	public boolean insertContentPage(String url){
 		if(url.isEmpty())
 			return false;
-		contentList.add(url);
+//		contentList.add(url);
+		contentList.offer(url);
 		if(isRunning==false){
-			synchronized(this){
+			synchronized(lockObj){
 				if(isRunning==false){
 					isRunning=true;
-					this.start();
+					thread=new FetchThread();
+					thread.start();
 				}
 			}
 		}

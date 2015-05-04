@@ -22,15 +22,21 @@ public class SsdutParse implements ParseStrategy{
 	private void initParse(String url){
 		rootUrl=url;
 		indexList.add(rootUrl);
+		visitedSet.add(rootUrl);
 	}
 	public void parse(String url){
 		initParse(url);
+		String baseUrl="http://oldssdut.dlut.edu.cn/";
 		while(!indexList.isEmpty()){
 			String indexUrl=indexList.remove(0);
 			Document doc=crawler.getDocument(indexUrl, "utf8");
 			Elements eles=doc.select("a[href]");
 			for(Element ele:eles){
-				String newUrl=ele.attr("abs:href");
+				String newUrl=ele.attr("href");
+				newUrl=baseUrl+newUrl;
+				if(visitedSet.contains(newUrl))
+					continue;
+				visitedSet.add(newUrl);
 				if(isContentPage(newUrl)){
 					insertContentPage(newUrl);
 				}else if(isIndexPage(newUrl)&&newUrl.indexOf("News/student")>0){
@@ -41,15 +47,13 @@ public class SsdutParse implements ParseStrategy{
 		}
 	}
 	private void insertIndexPage(String newUrl){
-//		indexList.add(newUrl);
-		System.out.println(newUrl);
+		indexList.add(newUrl);
 	}
 	private void insertContentPage(String newUrl){
-//		fetcher.insertContentPage(newUrl);
-		System.out.println(newUrl);
+		fetcher.insertContentPage(newUrl);
 	}
 	private boolean isIndexPage(String url){
-		Pattern pattern=Pattern.compile("(http://|https://){1}[\\w\\./]+");
+		Pattern pattern=Pattern.compile("(http://|https://){1}[\\w\\./]+(\\?&p=[0-9]*)?");
 		Matcher matcher=pattern.matcher(url);
 		return matcher.matches();
 	}

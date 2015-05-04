@@ -18,6 +18,11 @@ public class CrawTest {
 		parse.parse(url);
 //		System.out.println(parse.isContentPage(url));
 	}
+	public void testIndexPage(){
+		String url="http://oldssdut.dlut.edu.cn/index.php/News/student.html?&p=2";
+		SsdutParse parse=new SsdutParse();
+//		System.out.println(parse.isIndexPage(url));
+	}
 	public void testParseContent(){
 		String url="http://oldssdut.dlut.edu.cn/index.php/News/13274.html";
 		ContentFetch fetcher=new ContentFetch();

@@ -4,11 +4,15 @@ import java.sql.ResultSet;
 
 public class OracleDataOperate extends AbstractDataOperate{
 
-	public void insert(String command) {
+	public boolean insert(String command) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
-
+	
+	public boolean update(String command){
+		return false;
+	}
+	
 	public ResultSet get(String command) {
 		// TODO Auto-generated method stub
 		return null;

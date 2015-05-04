@@ -3,13 +3,40 @@ package com.wys.anotherdata;
 import java.io.InputStream;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
 public class MySQLDataOperate extends AbstractDataOperate{
 
-	public void insert(String command) {
-		// TODO Auto-generated method stub
-		
+	public boolean insert(String command) {
+		Statement stat=null;
+		try {
+			stat=con.createStatement();
+			int rowsEffected=stat.executeUpdate(command);
+			if(rowsEffected>0)
+				return true;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean update(String command){
+		Statement stat=null;
+		try {
+			stat=con.createStatement();
+			int rowsEffected=stat.executeUpdate(command);
+			if(rowsEffected>0)
+				return true;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	public ResultSet get(String command) {
@@ -34,8 +61,7 @@ public class MySQLDataOperate extends AbstractDataOperate{
 			con=DriverManager.getConnection(url, user, pwd);	
 		}catch(Exception e){
 			e.printStackTrace();
-		}
-		
+		}	
 	}
 
 }

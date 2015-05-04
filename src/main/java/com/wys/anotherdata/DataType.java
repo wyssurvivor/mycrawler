@@ -1,8 +1,8 @@
 package com.wys.anotherdata;
 
 public enum DataType {
-	MySQL{DataOperate getDataOperate(){return new MySQLDataOperate();}},
-	Oracle{DataOperate getDataOperate(){return new OracleDataOperate();}};
+	MySQL{AbstractDataOperate getDataOperate(){return new MySQLDataOperate();}},
+	Oracle{AbstractDataOperate getDataOperate(){return new OracleDataOperate();}};
 	
-	abstract DataOperate getDataOperate();
+	abstract AbstractDataOperate getDataOperate();
 }
