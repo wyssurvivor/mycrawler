@@ -8,7 +8,9 @@ import java.sql.Statement;
 import java.util.Properties;
 
 public class MySQLDataOperate extends AbstractDataOperate{
-
+	public MySQLDataOperate(){
+		this.connect();
+	}
 	public boolean insert(String command) {
 		Statement stat=null;
 		try {
@@ -19,6 +21,7 @@ public class MySQLDataOperate extends AbstractDataOperate{
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			System.out.println(command);
 			e.printStackTrace();
 		}
 		return false;

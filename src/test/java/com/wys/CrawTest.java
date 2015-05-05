@@ -12,6 +12,15 @@ public class CrawTest {
 		System.out.print(doc.html());
 	}
 	@Test
+	public void testStringSplit(){
+		String newUrl="http://oldssdut.dlut.edu.cn/index.php/News/student/p/12?&amp;p=2";
+		if(newUrl.indexOf("?&amp;p=")>0){
+			String[] strs=newUrl.split("[0-9]+\\?&amp;p=");
+			newUrl=strs[0]+strs[1];
+		}
+		System.out.println(newUrl);
+	}
+//	@Test
 	public void testPattern(){
 		String url="http://oldssdut.dlut.edu.cn/index.php/News/student.html";
 		SsdutParse parse=new SsdutParse();

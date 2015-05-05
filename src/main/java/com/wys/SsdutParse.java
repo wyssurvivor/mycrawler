@@ -26,7 +26,7 @@ public class SsdutParse implements ParseStrategy{
 	}
 	public void parse(String url){
 		initParse(url);
-		String baseUrl="http://oldssdut.dlut.edu.cn/";
+		String baseUrl="http://oldssdut.dlut.edu.cn";
 		while(!indexList.isEmpty()){
 			String indexUrl=indexList.remove(0);
 			Document doc=crawler.getDocument(indexUrl, "utf8");
@@ -46,7 +46,11 @@ public class SsdutParse implements ParseStrategy{
 			}
 		}
 	}
-	private void insertIndexPage(String newUrl){
+	public void insertIndexPage(String newUrl){
+		if(newUrl.indexOf("?&p=")>0){
+			String[] strs=newUrl.split("[0-9]+\\?&p=");
+			newUrl=strs[0]+strs[1];
+		}
 		indexList.add(newUrl);
 	}
 	private void insertContentPage(String newUrl){
@@ -62,23 +66,9 @@ public class SsdutParse implements ParseStrategy{
 		Matcher matcher=pattern.matcher(url);
 		return matcher.matches();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public static void main(String[] args){
+		String url="http://oldssdut.dlut.edu.cn/index.php/News/student/p/2";
+		SsdutParse parse=new SsdutParse();
+		parse.parse(url);
+	}
 }
